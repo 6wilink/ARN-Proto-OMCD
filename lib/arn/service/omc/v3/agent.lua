@@ -2,10 +2,10 @@
 -- 2017.10.20 ARN iOMC v3.0-alpha-201017Q
 
 --local DBG = print
-local function DBG(msg) end
+local DBG = function(msg) end
 
-local DBG_COMM = print
---local function DBG_COMM(msg) end
+--local DBG_COMM = print
+local DBG_COMM = function(msg) end
 
 
 local CCFF      = require 'arn.utils.ccff'
@@ -86,8 +86,14 @@ function OMC3.instant:Task(com)
     DBG(sfmt("OMC3.instant:Task(com)"))
     local data = self:DoSingleComm()
     if (data) then
-        DBG_COMM(sfmt('ARN Agent OMC3> adjust by response +%s', dt()))
-        OMC3.Tuner.Adjust(data)
+        local todoList = OMC3.Packet.Decode(data)
+        DBG_COMM(sfmt('ARN Agent OMC3> response parsed +%s', dt()))
+        --DBGChar.dump_dec(todoList)
+        --DBGChar.dump_hex(todoList)
+        if (todoList) then
+            DBG_COMM(sfmt('ARN Agent OMC3> adjust by response +%s', dt()))
+            OMC3.Tuner.Adjust(todoList)
+        end
     else
         DBG_COMM(sfmt('ARN Agent OMC3> invalid response +%s', dt()))
     end
@@ -135,21 +141,18 @@ function OMC3.instant:DoSingleComm()
     dataRaw.ts = ts()
     dataJson = OMC3.Packet.Encode(dataRaw)
 
-    DBG_COMM(sfmt('ARN iOMC3 Agent> request sent @ %s', dt()))
+    DBG_COMM(sfmt('ARN iOMC3 Agent> request sent +%s', dt()))
     DBG_COMM(dataJson)
     
     local buffer = self:reportToServer(dataJson)
     --DBGChar.dump_dec(buffer)
     --DBGChar.dump_hex(buffer)
     if (buffer and buffer ~='') then
-        DBG_COMM(sfmt('ARN iOMC3 Agent> response is valid @ %s', dt()))
+        DBG_COMM(sfmt('ARN iOMC3 Agent> got response +%s', dt()))
     else
-        DBG_COMM(sfmt('ARN iOMC3 Agent> response is empty @ %s', dt()))
+        DBG_COMM(sfmt('ARN iOMC3 Agent> empty response +%s', dt()))
     end
-    local data = OMC3.Packet.Decode(buffer)
-    --DBGChar.dump_dec(data)
-    --DBGChar.dump_hex(data)
-    return data
+    return buffer
 end
 
 
@@ -163,7 +166,7 @@ function OMC3.instant:reportToServer(dataJson)
                     self.res.TOKEN)
     DBG_COMM(url)
     local result = OMC3.Comm.Sync(url, dataJson)
-    DBG_COMM('Response: ' .. result)
+    DBG_COMM('Response: [' .. result .. ']')
     return result
 end
 
