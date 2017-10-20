@@ -1,0 +1,25 @@
+#!/bin/sh
+
+case $1 in
+    tpc)
+        echo -n '* trying TPC Agent: '
+        AGENT="/usr/sbin/arn-proto tpc"
+        AGENT_SIG=/tmp/.signal.omc3.tmp
+        ;;
+    omc|omc3|?|*)
+        echo -n '* trying OMC Agent: '
+        AGENT="/usr/sbin/arn-proto omc"
+        AGENT_SIG=/tmp/.signal.omc3.tmp
+        ;;
+esac
+
+case $2 in
+    stop|end|quit|bye)
+        echo 'stopping Agent'
+        echo "stop" > $AGENT_SIG
+        ;;
+    start|begin|run|go|?|*)
+        echo 'starting Agent'
+        $AGENT 2>/dev/null
+        ;;
+esac

@@ -1,0 +1,6 @@
+#!/usr/bin/lua
+-- by Qige <qigezhao@gmail.com>
+
+-- 2017.10.20
+local Agent = require 'arn.service.agent'
+Agent.Run(arg[1], arg[2], arg[3])
