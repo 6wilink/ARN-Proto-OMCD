@@ -103,7 +103,7 @@ function OMC3.instant:Cleanup()
 end
 
 function OMC3.instant:Idle(sec)
-    exec('sleep ' .. sec)
+    exec('sleep ' .. sec or 1)
 end
 
 function OMC3.instant:tokenGenerate()

@@ -6,7 +6,7 @@ local DBG = print
 --local function DBG(msg) end
 
 local CCFF = require 'arn.utils.ccff'
-local V3Agent = require 'arn.service.omc.v3.agent'
+local OMC3Agent = require 'arn.service.omc.v3.omc3_agent'
 
 local cget  = CCFF.conf.get
 local fread = CCFF.file.read
@@ -18,10 +18,11 @@ local sfmt  = string.format
 
 
 local OMC = {}
-OMC.VERSION = V3Agent.VERSION
+OMC.VERSION = OMC3Agent.VERSION
 
 OMC.conf = {}
 OMC.conf._SIGNAL = '/tmp/.signal.omc3.tmp'
+OMC.conf.enabled = cget('arn-proto','omc','enabled') or '0'
 OMC.conf.server = cget('arn-proto','omc','server') or '192.168.1.2'
 OMC.conf.port = cget('arn-proto','omc','port') or 80
 OMC.conf.interval = cget('arn-proto','omc','interval') or 1
@@ -33,6 +34,9 @@ function OMC.version()
 end
 
 function OMC.init()
+    if (OMC.conf.enabled ~= 'on' and OMC.conf.enabled ~= '1') then
+        return 'Agent-OMC disabled'
+    end
     if (not CCFF) then
         return 'need packet ARN-Scripts'
     end
@@ -51,12 +55,12 @@ function OMC.Run(conf, dbg)
     end
     
     -- get instant
-    local daemon = V3Agent.New(
+    local OMC3Instant = OMC3Agent.New(
         OMC.conf.server, OMC.conf.port,
         OMC.conf.interval, OMC.conf.reportInterval,
         OMC.conf.protocol
     )
-    if (not daemon) then
+    if (not OMC3Instant) then
         OMC.failed('unable to get instant')
         return
     end
@@ -72,7 +76,7 @@ function OMC.Run(conf, dbg)
     
     -- do some preparation: check env, utils, etc.
     local waitTO = 0.2
-    local msg = daemon:Prepare(waitTO)
+    local msg = OMC3Instant:Prepare(waitTO)
     if (not msg) then
         -- ready to run, check quit signal, run task, do idle
         local i
@@ -80,9 +84,9 @@ function OMC.Run(conf, dbg)
             if (OMC.QUIT_SIGNAL()) then
                 break
             end
-            daemon:Task('all')
+            OMC3Instant:Task('all')
             OMC.reply(sfmt("--> Agent-OMC synced +%s", dt()))
-            daemon:Idle(OMC.conf.interval)
+            OMC3Instant:Idle(OMC.conf.interval)
             --break --TODO: DEBUG USE ONLY
         end
         local s = sfmt("-> signal SIGTERM +%s", dt())
@@ -92,7 +96,7 @@ function OMC.Run(conf, dbg)
     end
     
     -- clean up instant
-    daemon:Cleanup()
+    OMC3Instant:Cleanup()
 
     -- mark quit
     local s = sfmt("-> stopped +%s", dt())

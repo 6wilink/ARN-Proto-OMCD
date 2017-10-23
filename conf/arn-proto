@@ -1,4 +1,5 @@
 config arn-proto 'omc'
+    option enabled '1'
     option server '192.168.1.3'
     option port 80
     option protocol 'http'
@@ -6,6 +7,7 @@ config arn-proto 'omc'
     option report_interval 10
     
 config arn-proto 'tpc'
+    option enabled '0'
     option port 3001
     option policy 'snr' # snr|agc|rxgain
     option increase_step 9

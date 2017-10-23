@@ -7,7 +7,7 @@ local function DBG(msg) end
 
 local CCFF = require 'arn.utils.ccff'
 local exec = CCFF.execute
-local fexist = CCFF.file.exists
+local fexists = CCFF.file.exists
 local sfmt = string.format
 
 local cURL = {}
@@ -17,7 +17,7 @@ cURL.postJsonFmt = 'curl -m 2 -H "Content-type: application/json" -X POST -d "%s
 
 function cURL.Env()
     local fileCurl = cURL.binFile
-    return fexist(fileCurl)
+    return fexists(fileCurl)
 end
 
 function cURL.PostJson(url, data)
