@@ -89,7 +89,7 @@ function Tuner.findItemVal(todoList, itemList)
             idx = idx + 2
             vidx = vidx + 2
         end
-        DBG(sfmt('--> key = %s, val = %s', key, val))
+        DBG(sfmt('--> key = %s, val = %s', key or '-', val or '-'))
     end
     return key, val
 end
