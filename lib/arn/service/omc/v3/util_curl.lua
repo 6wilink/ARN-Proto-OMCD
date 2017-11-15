@@ -13,7 +13,7 @@ local sfmt = string.format
 local cURL = {}
 cURL.binFile = '/usr/bin/curl'
 cURL.postFmt = "curl -m 2 -d '%s' '%s' 2>/dev/null"
-cURL.postJsonFmt = 'curl -m 2 -H "Content-type: application/json" -X POST -d "%s" "%s" 2>/dev/null'
+cURL.postJsonFmt = "curl -m 2 -X POST -d 'data=%s' ''%s' 2>/dev/null"
 
 function cURL.Env()
     local fileCurl = cURL.binFile
