@@ -31,7 +31,7 @@ OMC3.Packet = require 'arn.service.omc.v3.util_packet'
 OMC3.Comm = require 'arn.service.omc.v3.util_comm'
 
 OMC3.conf = {}
-OMC3.conf.fmtHttpReq = '%s://%s:%s/iomc3/dev/mngr.php?a=%s&z=%s'
+OMC3.conf.fmtHttpReq = '%s://%s:%s/iomc3/dmngr.php?a=%s&z=%s'
 OMC3.conf.fmtTokenKey = "6Harmonics+ARN+%s"
 
 OMC3.instant = {}
@@ -158,7 +158,7 @@ end
 
 function OMC3.instant:reportToServer(dataJson)
     DBG(sfmt("Agent.instant:comm_cURL()"))
-    -- OMC3.conf.fmtHttpReq: '%s://%s:%s/iomc3/dev/mngr.php?%a=%s&z=%s'
+    -- OMC3.conf.fmtHttpReq: '%s://%s:%s/iomc3/dmngr.php?%a=%s&z=%s'
     local url = sfmt(OMC3.conf.fmtHttpReq,
                     self.conf.protocol, 
                     self.conf.server, self.conf.port,
