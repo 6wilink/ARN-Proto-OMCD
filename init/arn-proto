@@ -9,8 +9,7 @@ CMD=/usr/sbin/arn-agent
 
 start() {
     if [ -f "$CONF" ]; then
-        config_load $CONF
-        config_foreach uci_conf $APP
+        echo "- run agents by config file"
     else
         echo "* conf file missing, using default settings"
     fi
