@@ -18,12 +18,16 @@ function Agent.Run(com, conf, dbg)
     elseif (com == 'tpc') then
         Agent.COM = require 'arn.service.tpc.tpc_daemon'
     -- default 'omc'
-    else
+    elseif (com == 'omc') then
         Agent.COM = require 'arn.service.omc.omc_daemon'
     end
-    
+
+	if (Agent.COM) then
     print(sfmt('> Agent (%s) started', com or 'omc'))
     Agent.COM.Run(conf, dbg)
+  else
+    print('> unknown agent assigned')
+	end
 end
 
 return Agent

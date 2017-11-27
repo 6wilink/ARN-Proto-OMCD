@@ -1,0 +1,24 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+STOP=99
+
+APP=arn-proto
+CONF=/etc/config/arn-proto
+CMD=/usr/sbin/arn-agent
+
+start() {
+    if [ -f "$CONF" ]; then
+        echo "- run agents by config file"
+    else
+        echo "* conf file missing, using default settings"
+    fi
+
+    # run agents, they will determin if enabled
+    $CMD omc start >/dev/null 2&>1 &
+}
+
+stop() {
+    # stop agents
+    $CMD omc stop >/dev/null 2&>1
+}

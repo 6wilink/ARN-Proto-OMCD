@@ -18,7 +18,6 @@ local sfmt  = string.format
 
 
 local OMC = {}
-OMC.VERSION = OMC3Agent.VERSION
 
 OMC.conf = {}
 OMC.conf._SIGNAL = '/tmp/.signal.omc3.tmp'
@@ -43,16 +42,22 @@ function OMC.init()
     if (not OMC.conf.server) or (not OMC.conf.port) then
         return 'unknown server or port'
     end
+    if (not OMC3Agent) then
+        return 'unknown agent'
+    end
+    
+    OMC.VERSION = OMC3Agent.VERSION
+
     return nil
 end
 
 function OMC.Run(conf, dbg)
-    OMC.version()
     local err = OMC.init()
     if (err) then
         OMC.failed(err)
         return
     end
+    OMC.version()
     
     -- get instant
     local OMC3Instant = OMC3Agent.New(

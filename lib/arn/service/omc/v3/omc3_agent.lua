@@ -31,7 +31,7 @@ OMC3.Packet = require 'arn.service.omc.v3.util_packet'
 OMC3.Comm = require 'arn.service.omc.v3.util_comm'
 
 OMC3.conf = {}
-OMC3.conf.fmtHttpReq = '%s://%s:%s/iomc3/dev/mngr.php?a=%s&z=%s'
+OMC3.conf.fmtHttpReq = '%s://%s:%s/iomc3/ws.php?do=%s&z=%s'
 OMC3.conf.fmtTokenKey = "6Harmonics+ARN+%s"
 
 OMC3.instant = {}
@@ -56,6 +56,7 @@ function OMC3.New(
     instant.res = {}
     
     instant.cache = {}
+    instant.wmac = nil
     instant.cache.startTs = ts()
 
     return (instant)
@@ -132,11 +133,13 @@ function OMC3.instant:DoSingleComm()
     local nowTs = ts()
     local reportInterval = tonumber(self.conf.reportInterval)
     if (nowTs - lastReportTs >= reportInterval) then
-        dataRaw.ops = 'update'
+        dataRaw.ops = 'report'
         dataRaw.data = ARNMngr.SAFE_GET()
+        self.cache.wmac = dataRaw.data.abb_safe.wmac
         self.cache.lastReportTs = ts()
     else
         dataRaw.ops = 'sync'
+        dataRaw.wmac = self.cache.wmac or '-'
     end
     dataRaw.ts = ts()
     dataJson = OMC3.Packet.Encode(dataRaw)
@@ -158,11 +161,11 @@ end
 
 function OMC3.instant:reportToServer(dataJson)
     DBG(sfmt("Agent.instant:comm_cURL()"))
-    -- OMC3.conf.fmtHttpReq: '%s://%s:%s/iomc3/dev/mngr.php?%a=%s&z=%s'
+    -- OMC3.conf.fmtHttpReq: '%s://%s:%s/iomc3/dmngr.php?%do=%s&z=%s'
     local url = sfmt(OMC3.conf.fmtHttpReq,
                     self.conf.protocol, 
                     self.conf.server, self.conf.port,
-                    'update',
+                    'report',
                     self.res.TOKEN)
     DBG_COMM(url)
     local result = OMC3.Comm.Sync(url, dataJson)
