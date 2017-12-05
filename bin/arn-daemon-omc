@@ -2,5 +2,5 @@
 -- by Qige <qigezhao@gmail.com>
 
 -- 2017.10.20
-local Agent = require 'arn.service.omc.agent'
+local Agent = require 'arn.service.omc.omc_daemon'
 Agent.Run(arg[1], arg[2], arg[3])

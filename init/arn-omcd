@@ -4,7 +4,7 @@ START=99
 STOP=99
 
 CONF=/etc/config/arn-omcd
-CMD=/usr/sbin/arn-omcd
+CMD=/usr/sbin/arn-omc
 
 start() {
     if [ -f "$CONF" ]; then
@@ -14,10 +14,10 @@ start() {
     fi
 
     # run agents, they will determin if enabled
-    $CMD omc start >/dev/null 2&>1 &
+    $CMD start >/dev/null 2&>1 &
 }
 
 stop() {
     # stop agents
-    $CMD omc stop >/dev/null 2&>1
+    $CMD stop >/dev/null 2&>1
 }
