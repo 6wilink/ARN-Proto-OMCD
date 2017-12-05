@@ -21,12 +21,12 @@ local OMC = {}
 
 OMC.conf = {}
 OMC.conf._SIGNAL = '/tmp/.signal.omc3.tmp'
-OMC.conf.enabled = cget('arn-proto','omc','enabled') or '0'
-OMC.conf.server = cget('arn-proto','omc','server') or '192.168.1.2'
-OMC.conf.port = cget('arn-proto','omc','port') or 80
-OMC.conf.interval = cget('arn-proto','omc','interval') or 1
-OMC.conf.reportInterval = cget('arn-proto','omc','report_interval') or 5
-OMC.conf.protocol = cget('arn-proto','omc','protocol') or 'http'
+OMC.conf.enabled = cget('arn-omcd','v3','enabled') or '0'
+OMC.conf.server = cget('arn-omcd','v3','server') or '192.168.1.2'
+OMC.conf.port = cget('arn-omcd','v3','port') or 80
+OMC.conf.interval = cget('arn-omcd','v3','interval') or 1
+OMC.conf.reportInterval = cget('arn-omcd','v3','report_interval') or 5
+OMC.conf.protocol = cget('arn-omcd','v3','protocol') or 'http'
 
 function OMC.version()
     OMC.reply(sfmt('-> %s', OMC.VERSION))
@@ -45,7 +45,7 @@ function OMC.init()
     if (not OMC3Agent) then
         return 'unknown agent'
     end
-    
+
     OMC.VERSION = OMC3Agent.VERSION
 
     return nil
@@ -58,7 +58,7 @@ function OMC.Run(conf, dbg)
         return
     end
     OMC.version()
-    
+
     -- get instant
     local OMC3Instant = OMC3Agent.New(
         OMC.conf.server, OMC.conf.port,
@@ -69,16 +69,16 @@ function OMC.Run(conf, dbg)
         OMC.failed('unable to get instant')
         return
     end
-    
+
     -- mark instant ready
-    local msg = sfmt("-> started (%s://%s:%s | intl %s/%s) +%s", 
-        OMC.conf.protocol, OMC.conf.server, OMC.conf.port, 
-        OMC.conf.interval, OMC.conf.reportInterval, 
+    local msg = sfmt("-> started (%s://%s:%s | intl %s/%s) +%s",
+        OMC.conf.protocol, OMC.conf.server, OMC.conf.port,
+        OMC.conf.interval, OMC.conf.reportInterval,
         dt()
     )
     OMC.reply(msg)
     OMC.log(msg)
-    
+
     -- do some preparation: check env, utils, etc.
     local waitTO = 0.2
     local msg = OMC3Instant:Prepare(waitTO)
@@ -99,7 +99,7 @@ function OMC.Run(conf, dbg)
     else
         OMC.failed(msg)
     end
-    
+
     -- clean up instant
     OMC3Instant:Cleanup()
 
