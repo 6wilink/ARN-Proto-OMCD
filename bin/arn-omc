@@ -1,0 +1,16 @@
+#!/bin/sh
+
+echo -n '* trying OMC Agent: '
+AGENT="/usr/sbin/arn-omc-agent"
+AGENT_SIG=/tmp/.signal.omc3.tmp
+
+case $1 in
+    stop|end|quit|bye)
+        echo 'stopping Agent'
+        echo "stop" > $AGENT_SIG
+        ;;
+    start|begin|run|go|?|*)
+        echo 'starting Agent'
+        $AGENT 2>/dev/null
+        ;;
+esac

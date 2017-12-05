@@ -3,9 +3,8 @@
 START=99
 STOP=99
 
-APP=arn-proto
-CONF=/etc/config/arn-proto
-CMD=/usr/sbin/arn-agent
+CONF=/etc/config/arn-omcd
+CMD=/usr/sbin/arn-omcd
 
 start() {
     if [ -f "$CONF" ]; then
