@@ -11,6 +11,6 @@ case $1 in
         ;;
     start|begin|run|go|?|*)
         echo 'starting Agent'
-        $AGENT 2>/dev/null
+        $AGENT 2>/dev/null &
         ;;
 esac
