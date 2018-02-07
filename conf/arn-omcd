@@ -4,4 +4,5 @@ config arn-omcd 'v3'
     option port 80
     option protocol 'http'
     option interval 2
-    option report_interval 10
+    #option report_interval 10
+    option report_interval 4

@@ -2,8 +2,8 @@
 -- 2017.09.04 ENV|POST_JSON|POST
 -- 2017.10.20 Env|PostJson|Post v3.0-201017
 
-local DBG = print
---local function DBG(msg) end
+--local DBG = print
+local function DBG(msg) end
 
 local CCFF = require 'arn.utils.ccff'
 local exec = CCFF.execute

@@ -25,7 +25,7 @@ TODO:
     2. Parse message into table in pairs.
 ]]--
 function Packet.Decode(msg)
-    local result
+    local result = nil
     if (msg) then
         result = {}
         DBG('msg = [' .. msg .. ']')
@@ -33,11 +33,13 @@ function Packet.Decode(msg)
         local i, v
         for i,v in pairs(items) do
             local kv = Split(v, '=')
-            DBG(sfmt('key, val = [%s], [%s]', kv[1] or '-', kv[2] or '-'))
-            tblPush(result, kv[1])
-            tblPush(result, kv[2])
+            local key = kv[1]
+            local val = kv[2]
+            if (key and val) then
+                result[key] = val
+                DBG(sfmt('result.%s = %s', key, val))
+            end
         end
-        DBG('result len: ' .. #result)
     end
     return result
 end

@@ -17,6 +17,8 @@ Tuner.Util = require 'arn.device.mngr'
 function Tuner.Adjust(todoList)
     DBG('Tuner.Adjust()> ')
     if (Tuner.verifyToken(todoList)) then
+        --[[
+        -- old kv pairs
         local op
         _, op = Tuner.whatToDo(todoList)
         if (op == 'set') then
@@ -40,6 +42,31 @@ function Tuner.Adjust(todoList)
         else
             DBG('nothing to do')
         end
+        ]]--
+        
+        --[[for k,v in pairs(todoList) do
+            print(k, v)
+        end
+        ]]--
+            
+        -- object
+        local op = todoList['cmd']
+        local val = todoList['val']
+        DBG(sfmt('Tuner.Adjust()> %s=%s %s', op or '.', val or '.', #todoList))
+        if (op and val) then
+            if (op == 'mode') then
+                print(sfmt('==== set mode to %s ====', val))
+                ARNMngr.SAFE_SET('mode', val)
+            elseif (op == 'channel') then
+                print(sfmt('==== set channel to %s ====', val))
+                ARNMngr.SAFE_SET('channel', val)
+            elseif (op == 'txpower') then
+                print(sfmt('==== set txpower to %s ====', val))
+                ARNMngr.SAFE_SET('txpower', val)
+            else
+                DBG('* bad command, do nothing')
+            end
+        end
     else
        print('==== Bad TOKEN ====') 
     end
@@ -48,9 +75,12 @@ end
 -- TODO: verify TOKEN, and return true|false
 function Tuner.verifyToken(todoList)
     DBG('Tuner.verifyToken(todoList)> ')
-    return true
+    return (true and todoList)
 end
 
+
+--[[
+-- old kv pairs
 function Tuner.findSetItem(todoList)
     DBG('Tuner.findSetItem(todoList)> ')
     local keyArray = { 'freq', 'chan', 'rgn', 'txpwr' }
@@ -93,5 +123,6 @@ function Tuner.findItemVal(todoList, itemList)
     end
     return key, val
 end
+]]--
 
 return Tuner
