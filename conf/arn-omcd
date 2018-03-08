@@ -1,8 +1,8 @@
 config arn-omcd 'v3'
     option enabled '1'
-    option server '192.168.1.4'
-    option port 80
-    option protocol 'http'
+    option server '192.168.1.20'
+    option port 443
+    option protocol 'https'
     option interval 2
     #option report_interval 10
     option report_interval 4
